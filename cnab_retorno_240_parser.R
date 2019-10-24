@@ -59,7 +59,7 @@ parse_cnab240_ret <- function() {
            `Código da Carteira (T)` = substring(cnab_T, 58, 58),
            `Número do Documento de Cobrança (T)` = substring(cnab_T, 59, 68),
            `Data do Vencimento do Título (T)` = dmy(substring(cnab_T, 74, 81)),
-           `Valor Nominal do Título (T)` = substring(cnab_T, 82, 96),
+           `Valor Nominal do Título (T)` = round(as.numeric(substring(cnab_T, 82, 96))/100,2),
            `Número do Banco (T)` = substring(cnab_T, 97, 99),
            `Agência Cobradora/Recebedora (T)` = substring(cnab_T, 100, 104),
            `Dígito Verificador da Agência Cobradora/Recebedora(T)` = substring(cnab_T, 105, 105),
