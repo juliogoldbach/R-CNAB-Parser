@@ -20,7 +20,7 @@ parse_cnab240_ret <- function() {
   # ---------------------------------------------------------------------------------------
   # | Warning messages:                                                                   |
   # | 1: In get_source(x, text_field = text_field, encoding = e, source = source,  :      |
-  # | Unsupported extension ‘rem’ of file ____.RET treating as plain text.                |
+  # | Unsupported extension ‘ret’ of file ____.RET treating as plain text.                |
   # | *. _ failed to parse.  (possible)                                                   |
   # ---------------------------------------------------------------------------------------
   
