@@ -22,6 +22,7 @@ ajustar_cnab_file <- function() {
   # | Warning messages:                                                                   |
   # | 1: In get_source(x, text_field = text_field, encoding = e, source = source,  :      |
   # | Unsupported extension ‘ret’ of file ____.RET treating as plain text.                |
+  # | *. _ failed to parse.  (possible)                                                   |
   # ---------------------------------------------------------------------------------------
   
   
