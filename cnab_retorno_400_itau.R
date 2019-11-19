@@ -1,4 +1,4 @@
-# function to parse CNAB 400 retonro file into dataframe.
+# function to parse CNAB 400 retorno file into dataframe.
 # made based on Itaú documentation: 
 # https://download.itau.com.br/bankline/layout_cobranca_400bytes_cnab_itau_mensagem.pdf
 #
