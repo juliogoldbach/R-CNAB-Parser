@@ -28,9 +28,14 @@ parse_cnab240 <- function() {
   temp_df <- as.data.frame(strsplit(first$text,"\n"))
   names(temp_df)[1] <- paste("info")
   temp_df <- as_tibble(temp_df, skip = 1)[-1:-2,]
-  temp_df <- temp_df[((nrow(temp_df) - 1):nrow(temp_df)*(-1)),][-seq(3, nrow(temp_df), by = 3),] 
+  new <- temp_df[-nrow(temp_df)+1:-nrow(temp_df),]
   
-  cnab <- cbind(temp_df[seq(1,nrow(temp_df), 2),] %>% mutate(info1 = info), temp_df[seq(2,nrow(temp_df), 2),] %>% mutate(info2 = info))[,c(2,4)]
+  
+  cnab <- cbind(
+    new[seq(1,nrow(new), 3),] %>% mutate(info1 = info),
+    cbind(new[seq(2,nrow(new), 3),] %>% mutate(info2 = info),
+          new[seq(3,nrow(new), 3),] %>% mutate(info3 = info))
+  )[,c(2,4,6)]
   
   cnab %>% 
     mutate(`Código do Banco na Compensação` = substring(info1,1,3),
@@ -45,7 +50,7 @@ parse_cnab240 <- function() {
            `Número da Conta Corrente` = substring(info1, 24, 35),
            #`Dígito Verificador da Conta` = substring(info1, 36, 36),
            #`Dígito Verificador da Ag/Conta` = substring(info1, 37, 37),
-           # zeros = substring(info1, 38, 47),
+           zeros0 = substring(info1, 38, 47),
            `Identificação do Título no Banco` = substring(info1, 48, 57),
            # codigo.carteira = substring(info1, 58, 58),
            # forma.cadastro.titulo = substring(info1, 59, 59),
@@ -98,12 +103,16 @@ parse_cnab240 <- function() {
            `Nome do Sacador/Avalista` = substring(info2, 170, 209),
            #  nosso.numero.banco.corresp = substring(info2, 213, 232),
            #   cnab.febraban3 = substring(info2, 233, 240),
-           `Cód. Bco. Corresp. na Compensação` = substring(info2, 210, 212)) %>% 
-    select(-c("info1", "info2")) -> cnab
+           `Cód. Bco. Corresp. na Compensação` = substring(info2, 210, 212),
+           `Código de multa` = substring(info3, 66, 66),
+           `Data de multa` = dmy(substring(info3, 67, 74)),
+           `Valor da multa` =  round(as.numeric(substring(info3,75,89))/100,2)
+           ) %>% 
+    select(-c("info1", "info2", "info3")) -> cnab
   
   return(cnab)
   
   
 }
 
-cnab <- parse_cnab240()
+cnab_remessa_ot <- parse_cnab240()
