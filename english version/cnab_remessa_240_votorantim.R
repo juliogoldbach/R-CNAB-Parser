@@ -28,10 +28,16 @@ parse_cnab240 <- function() {
   temp_df <- as.data.frame(strsplit(first$text,"\n"))
   names(temp_df)[1] <- paste("info")
   temp_df <- as_tibble(temp_df, skip = 1)[-1:-2,]
-  temp_df <- temp_df[((nrow(temp_df) - 1):nrow(temp_df)*(-1)),][-seq(3, nrow(temp_df), by = 3),] 
+  new <- temp_df[-nrow(temp_df)+1:-nrow(temp_df),]
   
-  cnab <- cbind(temp_df[seq(1,nrow(temp_df), 2),] %>% mutate(info1 = info), temp_df[seq(2,nrow(temp_df), 2),] %>% mutate(info2 = info))[,c(2,4)]
   
+  cnab <- cbind(
+    new[seq(1,nrow(new), 3),] %>% mutate(info1 = info),
+                cbind(new[seq(2,nrow(new), 3),] %>% mutate(info2 = info),
+                      new[seq(3,nrow(new), 3),] %>% mutate(info3 = info))
+  )[,c(2,4,6)]
+  
+
   cnab %>% 
     mutate(`Bank code` = substring(info1,1,3),
            `Service lot` = substring(info1, 4,7),
@@ -98,8 +104,12 @@ parse_cnab240 <- function() {
            `name of sacador/avalista` = substring(info2, 170, 209),
            #  nosso.numero.banco.corresp = substring(info2, 213, 232),
            #   cnab.febraban3 = substring(info2, 233, 240),
-           `bank code at compensation` = substring(info2, 210, 212)) %>% 
-    select(-c("info1", "info2")) -> cnab
+           `bank code at compensation` = substring(info2, 210, 212),
+           `multa  code` = substring(info3, 66, 66),
+           `multa  date` = dmy(substring(info3, 67, 74)),
+           `multa  value` =  round(as.numeric(substring(info3,75,89))/100,2)
+           ) %>% 
+    select(-c("info1", "info2", "info3")) -> cnab
   
   return(cnab)
   
